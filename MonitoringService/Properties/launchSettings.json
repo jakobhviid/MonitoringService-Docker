@@ -23,7 +23,8 @@
       "launchUrl": "",
       "applicationUrl": "http://localhost:5000",
       "environmentVariables": {
-        "ASPNETCORE_ENVIRONMENT": "Development"
+        "ASPNETCORE_ENVIRONMENT": "Development",
+        "MONITORING_POSTGRES_CONNECTION_STRING": "Host=localhost;Port=5433;Database=monitoring_db;Username=monitoring;Password=Monitoring_database_password1"
       }
     }
   }

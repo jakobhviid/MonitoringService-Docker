@@ -1,0 +1,12 @@
+version: "3"
+
+services:
+  monitoring-database:
+    image: postgres
+    container_name: monitoring-database
+    ports:
+      - 5433:5432
+    environment:
+      POSTGRES_USER: monitoring
+      POSTGRES_PASSWORD: Monitoring_database_password1
+      POSTGRES_DB: monitoring_db
