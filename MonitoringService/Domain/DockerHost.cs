@@ -14,6 +14,6 @@ namespace MonitoringService.Domain
 
         [Required] public string CommandResponseTopic { get; set; }
 
-        private ICollection<DockerContainer> DockerContainers { get; set; }
+        public ICollection<DockerContainer> DockerContainers { get; set; }
     }
 }

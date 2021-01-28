@@ -7,7 +7,10 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using MonitoringService.Application;
+using MonitoringService.Domain;
 using MonitoringService.Infrastructure;
+using MonitoringService.Infrastructure.Repositories;
 
 namespace MonitoringService
 {
@@ -23,7 +26,10 @@ namespace MonitoringService
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddControllers();
+            // The serializer settings are added to avoid cycles in the object graph
+            // (example: post -> blog -> post -> blog ...)
+            services.AddControllers().AddNewtonsoftJson(options =>
+                options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore);
 
             // environment variables check
             var connectionString = Environment.GetEnvironmentVariable("MONITORING_POSTGRES_CONNECTION_STRING");
@@ -43,6 +49,12 @@ namespace MonitoringService
                     errorCodesToAdd: null
                 ));
             });
+
+            services.AddTransient<IDockerHostRepository, DockerHostRepository>();
+            services.AddTransient<IDockerContainerRepository, DockerContainerRepository>();
+
+            services.AddScoped<IDockerHostService, DockerHostService>();
+            services.AddScoped<IDockerContainerService, DockerContainerService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

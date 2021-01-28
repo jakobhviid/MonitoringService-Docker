@@ -5,14 +5,12 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <Folder Include="Api\Controllers"/>
         <Folder Include="Api\Models"/>
-        <Folder Include="Application"/>
         <Folder Include="Infrastructure\Migrations"/>
-        <Folder Include="Infrastructure\Repositories"/>
     </ItemGroup>
 
     <ItemGroup>
+        <PackageReference Include="Microsoft.AspNetCore.Mvc.NewtonsoftJson" Version="3.1.11"/>
         <PackageReference Include="Microsoft.EntityFrameworkCore" Version="5.0.2"/>
         <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="5.0.2"/>
         <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="5.0.1"/>
