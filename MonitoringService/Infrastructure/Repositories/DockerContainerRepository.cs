@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using MonitoringService.Domain;
 
@@ -19,11 +20,15 @@ namespace MonitoringService.Infrastructure.Repositories
                 container.ContainerId.Equals(containerId) && container.DockerHost.ServerName.Equals(serverName));
         }
 
-        public async Task<DockerContainer> Create(DockerContainer dockerContainer)
+        public async void Create(DockerContainer dockerContainer)
         {
-            var newEntity = _context.DockerContainers.Add(dockerContainer).Entity;
+            if (dockerContainer.DockerHost == null)
+            {
+                throw new ArgumentNullException(nameof(dockerContainer.DockerHost));
+            }
+
+            _context.DockerContainers.Add(dockerContainer);
             await _context.SaveChangesAsync();
-            return newEntity;
         }
 
         public async Task<DockerContainer> Get(string containerId, string serverName)

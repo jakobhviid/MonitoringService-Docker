@@ -25,18 +25,20 @@ namespace MonitoringService.Application
                                             " combination already exists in the database!");
             }
 
+            var dockerHost = await _dockerHostService.Get(new GetDockerHostParameters(parameters.ServerName));
+
             var newDockerContainer = new DockerContainer
             {
                 Id = Guid.NewGuid(),
+                DockerHost = dockerHost,
                 ContainerId = parameters.ContainerId,
                 Name = parameters.Name,
                 Image = parameters.Image,
                 CreationTime = DateTime.Now,
                 LastUpdateTime = DateTime.Now
             };
-            await _dockerHostService.AddDockerHostContainer(
-                new AddDockerHostContainerParameters(parameters.ServerName, newDockerContainer));
-            return await _dockerContainerRepository.Get(parameters.ContainerId, parameters.ServerName);
+            _dockerContainerRepository.Create(newDockerContainer);
+            return new DockerContainer();
         }
 
         public async Task<DockerContainer> Get(GetDockerContainerParameters parameters)

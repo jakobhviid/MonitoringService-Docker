@@ -29,9 +29,8 @@ namespace MonitoringService.Application
                 CommandResponseTopic = parameters.CommandResponseTopic
             };
 
-            var newDockerHost = await _dockerHostRepository.Create(dockerHost);
-            if (newDockerHost == null) throw new ArgumentNullException(nameof(newDockerHost));
-            return newDockerHost;
+            _dockerHostRepository.Create(dockerHost);
+            return dockerHost;
         }
 
         public async Task<DockerHost> CreateIfNotExists(CreateDockerHostParameters parameters)
@@ -53,16 +52,6 @@ namespace MonitoringService.Application
                 throw new ArgumentNullException(nameof(dockerHost) + " \"" + parameters.ServerName +
                                                 "\" does not exist!");
             return dockerHost;
-        }
-
-        public async Task<DockerHost> AddDockerHostContainer(AddDockerHostContainerParameters parameters)
-        {
-            if (!await _dockerHostRepository.ServerNameExists(parameters.ServerName))
-            {
-                throw new ArgumentNullException(parameters.ServerName + "\" Docker host does not exist!");
-            }
-
-            return await _dockerHostRepository.AddContainer(parameters.ServerName, parameters.DockerContainer);
         }
     }
 }
