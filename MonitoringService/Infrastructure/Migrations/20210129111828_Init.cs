@@ -16,7 +16,10 @@ namespace MonitoringService.Infrastructure.Migrations
                     CommandRequestTopic = table.Column<string>(type: "text", nullable: false),
                     CommandResponseTopic = table.Column<string>(type: "text", nullable: false)
                 },
-                constraints: table => { table.PrimaryKey("PK_DockerHosts", x => x.Id); });
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_DockerHosts", x => x.Id);
+                });
 
             migrationBuilder.CreateTable(
                 name: "DockerContainers",
@@ -77,7 +80,7 @@ namespace MonitoringService.Infrastructure.Migrations
                     DockerContainerId = table.Column<Guid>(type: "uuid", nullable: true),
                     State = table.Column<string>(type: "text", nullable: false),
                     Status = table.Column<string>(type: "text", nullable: false),
-                    Health = table.Column<string>(type: "text", nullable: false),
+                    Health = table.Column<string>(type: "text", nullable: true),
                     UpdateTime = table.Column<DateTime>(type: "timestamp without time zone", nullable: false)
                 },
                 constraints: table =>
@@ -94,7 +97,7 @@ namespace MonitoringService.Infrastructure.Migrations
             migrationBuilder.CreateIndex(
                 name: "IX_DockerContainers_ContainerId_DockerHostId",
                 table: "DockerContainers",
-                columns: new[] {"ContainerId", "DockerHostId"},
+                columns: new[] { "ContainerId", "DockerHostId" },
                 unique: true);
 
             migrationBuilder.CreateIndex(
@@ -111,13 +114,13 @@ namespace MonitoringService.Infrastructure.Migrations
             migrationBuilder.CreateIndex(
                 name: "IX_StatsRecords_DockerContainerId_UpdateTime",
                 table: "StatsRecords",
-                columns: new[] {"DockerContainerId", "UpdateTime"},
+                columns: new[] { "DockerContainerId", "UpdateTime" },
                 unique: true);
 
             migrationBuilder.CreateIndex(
                 name: "IX_StatusRecords_DockerContainerId_UpdateTime",
                 table: "StatusRecords",
-                columns: new[] {"DockerContainerId", "UpdateTime"},
+                columns: new[] { "DockerContainerId", "UpdateTime" },
                 unique: true);
         }
 

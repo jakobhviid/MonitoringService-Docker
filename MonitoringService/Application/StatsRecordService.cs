@@ -5,7 +5,7 @@ using MonitoringService.Domain;
 
 namespace MonitoringService.Application
 {
-    public class StatsRecordService
+    public class StatsRecordService : IStatsRecordService
     {
         private readonly IDockerContainerService _dockerContainerService;
         private readonly IStatsRecordRepository _statsRecordRepository;
@@ -38,7 +38,7 @@ namespace MonitoringService.Application
                 SystemCpuUsage = parameters.SystemCpuUsage,
                 UpdateTime = parameters.UpdateTime
             };
-            _statsRecordRepository.Create(statsRecord);
+            await _statsRecordRepository.Create(statsRecord);
             return statsRecord;
         }
     }

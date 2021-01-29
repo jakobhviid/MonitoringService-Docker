@@ -37,8 +37,20 @@ namespace MonitoringService.Application
                 CreationTime = DateTime.Now,
                 LastUpdateTime = DateTime.Now
             };
-            _dockerContainerRepository.Create(newDockerContainer);
+            await _dockerContainerRepository.Create(newDockerContainer);
             return new DockerContainer();
+        }
+
+        public async Task<DockerContainer> CreateIfNotExists(CreateDockerContainerParameters parameters)
+        {
+            try
+            {
+                return await Create(parameters);
+            }
+            catch (ArgumentException ex)
+            {
+                return await Get(new GetDockerContainerParameters(parameters.ContainerId, parameters.ServerName));
+            }
         }
 
         public async Task<DockerContainer> Get(GetDockerContainerParameters parameters)

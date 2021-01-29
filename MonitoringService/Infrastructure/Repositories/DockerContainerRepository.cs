@@ -20,7 +20,7 @@ namespace MonitoringService.Infrastructure.Repositories
                 container.ContainerId.Equals(containerId) && container.DockerHost.ServerName.Equals(serverName));
         }
 
-        public async void Create(DockerContainer dockerContainer)
+        public async Task Create(DockerContainer dockerContainer)
         {
             if (dockerContainer.DockerHost == null)
             {

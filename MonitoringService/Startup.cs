@@ -10,6 +10,7 @@ using Microsoft.Extensions.Logging;
 using MonitoringService.Application;
 using MonitoringService.Domain;
 using MonitoringService.Infrastructure;
+using MonitoringService.Infrastructure.Gateways;
 using MonitoringService.Infrastructure.Repositories;
 
 namespace MonitoringService
@@ -52,9 +53,16 @@ namespace MonitoringService
 
             services.AddTransient<IDockerHostRepository, DockerHostRepository>();
             services.AddTransient<IDockerContainerRepository, DockerContainerRepository>();
+            services.AddTransient<IStatsRecordRepository, StatsRecordRepository>();
+            services.AddTransient<IStatusRecordRepository, StatusRecordRepository>();
+            services.AddTransient<IKafkaProducerGateway, KafkaProducerGateway>();
 
             services.AddScoped<IDockerHostService, DockerHostService>();
             services.AddScoped<IDockerContainerService, DockerContainerService>();
+            services.AddScoped<IStatsRecordService, StatsRecordService>();
+            services.AddScoped<IStatusRecordService, StatusRecordService>();
+
+            services.AddHostedService<KafkaConsumerBackgroundService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

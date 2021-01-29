@@ -29,7 +29,7 @@ namespace MonitoringService.Application
                 CommandResponseTopic = parameters.CommandResponseTopic
             };
 
-            _dockerHostRepository.Create(dockerHost);
+            await _dockerHostRepository.Create(dockerHost);
             return dockerHost;
         }
 

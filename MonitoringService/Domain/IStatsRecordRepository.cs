@@ -1,7 +1,9 @@
-﻿namespace MonitoringService.Domain
+﻿using System.Threading.Tasks;
+
+namespace MonitoringService.Domain
 {
     public interface IStatsRecordRepository
     {
-        public void Create(StatsRecord statsRecord);
+        public Task Create(StatsRecord statsRecord);
     }
 }

@@ -13,7 +13,7 @@ namespace MonitoringService.Domain
 
         [Required] public string Status { get; set; }
 
-        [Required] public string Health { get; set; }
+        public string Health { get; set; }
 
         [Required] public DateTime UpdateTime { get; set; }
     }

@@ -20,7 +20,7 @@ namespace MonitoringService.Infrastructure.Repositories
             return await _context.DockerHosts.AnyAsync(host => host.ServerName.Equals(serverName));
         }
 
-        public async void Create(DockerHost dockerHost)
+        public async Task Create(DockerHost dockerHost)
         {
             _context.DockerHosts.Add(dockerHost);
             await _context.SaveChangesAsync();

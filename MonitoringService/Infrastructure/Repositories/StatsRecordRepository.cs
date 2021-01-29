@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading.Tasks;
 using MonitoringService.Domain;
 
 namespace MonitoringService.Infrastructure.Repositories
@@ -12,7 +13,7 @@ namespace MonitoringService.Infrastructure.Repositories
             _context = context;
         }
 
-        public async void Create(StatsRecord statsRecord)
+        public async Task Create(StatsRecord statsRecord)
         {
             if (statsRecord.DockerContainer == null)
             {

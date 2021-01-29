@@ -5,7 +5,7 @@ using MonitoringService.Domain;
 
 namespace MonitoringService.Application
 {
-    public class StatusRecordService
+    public class StatusRecordService : IStatusRecordService
     {
         private readonly IDockerContainerService _dockerContainerService;
         private readonly IStatusRecordRepository _statusRecordRepository;
@@ -33,7 +33,7 @@ namespace MonitoringService.Application
                 UpdateTime = parameters.UpdateTime
             };
 
-            _statusRecordRepository.Create(statusRecord);
+            await _statusRecordRepository.Create(statusRecord);
             return statusRecord;
         }
     }

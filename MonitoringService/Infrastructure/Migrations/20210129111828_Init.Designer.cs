@@ -10,7 +10,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace MonitoringService.Infrastructure.Migrations
 {
     [DbContext(typeof(DockerHostContext))]
-    [Migration("20210116093205_Init")]
+    [Migration("20210129111828_Init")]
     partial class Init
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -141,7 +141,6 @@ namespace MonitoringService.Infrastructure.Migrations
                         .HasColumnType("uuid");
 
                     b.Property<string>("Health")
-                        .IsRequired()
                         .HasColumnType("text");
 
                     b.Property<string>("State")
@@ -166,7 +165,7 @@ namespace MonitoringService.Infrastructure.Migrations
             modelBuilder.Entity("MonitoringService.Domain.DockerContainer", b =>
                 {
                     b.HasOne("MonitoringService.Domain.DockerHost", "DockerHost")
-                        .WithMany()
+                        .WithMany("DockerContainers")
                         .HasForeignKey("DockerHostId");
 
                     b.Navigation("DockerHost");
@@ -195,6 +194,11 @@ namespace MonitoringService.Infrastructure.Migrations
                     b.Navigation("StatsRecords");
 
                     b.Navigation("StatusRecords");
+                });
+
+            modelBuilder.Entity("MonitoringService.Domain.DockerHost", b =>
+                {
+                    b.Navigation("DockerContainers");
                 });
 #pragma warning restore 612, 618
         }
