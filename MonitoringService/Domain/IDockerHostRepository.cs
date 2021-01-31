@@ -8,6 +8,5 @@ namespace MonitoringService.Domain
         public Task Create(DockerHost dockerHost);
 
         public Task<DockerHost> Get(string serverName);
-        // public Task<DockerHost> AddContainer(string serverName, DockerContainer container);
     }
 }

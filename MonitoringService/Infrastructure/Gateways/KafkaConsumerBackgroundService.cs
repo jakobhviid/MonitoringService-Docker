@@ -52,12 +52,10 @@ namespace MonitoringService.Infrastructure.Gateways
                     switch (consumeResult.Topic)
                     {
                         case OverviewTopic:
-                            Console.WriteLine("trigger overview!");
                             var statusResult = JsonConvert.DeserializeObject<StatusKafkaServer>(consumeResult.Message.Value);
                             await ConsumeStatusResult(statusResult);
                             break;
                         case StatsTopic:
-                            Console.WriteLine("Triggered stats!");
                             var statsResult = JsonConvert.DeserializeObject<StatsKafkaServer>(consumeResult.Message.Value);
                             await ConsumeStatsResult(statsResult);
                             break;
