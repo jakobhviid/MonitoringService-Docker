@@ -36,10 +36,12 @@ namespace MonitoringService
             var connectionString = Environment.GetEnvironmentVariable("MONITORING_POSTGRES_CONNECTION_STRING");
             if (connectionString == null)
             {
-                connectionString =
-                    "Host=localhost;Port=5433;Database=monitoring_db;Username=monitoring;Password=Monitoring_database_password1";
-                // Console.WriteLine("'MONITORING_POSTGRES_CONNECTION_STRING' Database Connection string not found");
-                // System.Environment.Exit(1);
+                // The below commented line should be used when using EF Core to generate migrations, as the tool does
+                // not use environment variables and therefore the connection string is never found.
+                // connectionString =
+                //     "Host=localhost;Port=5433;Database=monitoring_db;Username=monitoring;Password=Monitoring_database_password1";
+                Console.WriteLine("'MONITORING_POSTGRES_CONNECTION_STRING' Database Connection string not found");
+                System.Environment.Exit(1);
             }
 
             services.AddDbContext<DockerHostContext>(options =>
