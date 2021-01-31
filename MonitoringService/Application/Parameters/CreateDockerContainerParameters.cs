@@ -4,7 +4,8 @@ namespace MonitoringService.Application.Parameters
 {
     public class CreateDockerContainerParameters
     {
-        public CreateDockerContainerParameters(string containerId, string name, string image, string serverName, DateTime creationTime)
+        public CreateDockerContainerParameters(string containerId, string name, string image, string serverName,
+            DateTime creationTime)
         {
             ContainerId = containerId;
             Name = name;

@@ -10,6 +10,5 @@ namespace MonitoringService.Application
         public Task<DockerHost> CreateIfNotExists(CreateDockerHostParameters parameters);
 
         public Task<DockerHost> Get(GetDockerHostParameters parameters);
-        // public Task<DockerHost> AddDockerHostContainer(AddDockerHostContainerParameters parameters);
     }
 }

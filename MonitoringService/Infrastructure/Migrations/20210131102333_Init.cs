@@ -16,22 +16,19 @@ namespace MonitoringService.Infrastructure.Migrations
                     CommandRequestTopic = table.Column<string>(type: "text", nullable: false),
                     CommandResponseTopic = table.Column<string>(type: "text", nullable: false)
                 },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_DockerHosts", x => x.Id);
-                });
+                constraints: table => { table.PrimaryKey("PK_DockerHosts", x => x.Id); });
 
             migrationBuilder.CreateTable(
                 name: "DockerContainers",
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uuid", nullable: false),
+                    DockerHostId = table.Column<Guid>(type: "uuid", nullable: false),
                     ContainerId = table.Column<string>(type: "text", nullable: false),
                     Name = table.Column<string>(type: "text", nullable: false),
                     Image = table.Column<string>(type: "text", nullable: false),
                     CreationTime = table.Column<DateTime>(type: "timestamp without time zone", nullable: false),
-                    LastUpdateTime = table.Column<DateTime>(type: "timestamp without time zone", nullable: false),
-                    DockerHostId = table.Column<Guid>(type: "uuid", nullable: true)
+                    LastUpdateTime = table.Column<DateTime>(type: "timestamp without time zone", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -41,7 +38,7 @@ namespace MonitoringService.Infrastructure.Migrations
                         column: x => x.DockerHostId,
                         principalTable: "DockerHosts",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -49,7 +46,7 @@ namespace MonitoringService.Infrastructure.Migrations
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uuid", nullable: false),
-                    DockerContainerId = table.Column<Guid>(type: "uuid", nullable: true),
+                    DockerContainerId = table.Column<Guid>(type: "uuid", nullable: false),
                     CpuUsage = table.Column<decimal>(type: "numeric(20,0)", nullable: false),
                     NumOfCpu = table.Column<int>(type: "integer", nullable: false),
                     SystemCpuUsage = table.Column<decimal>(type: "numeric(20,0)", nullable: false),
@@ -69,7 +66,7 @@ namespace MonitoringService.Infrastructure.Migrations
                         column: x => x.DockerContainerId,
                         principalTable: "DockerContainers",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -77,7 +74,7 @@ namespace MonitoringService.Infrastructure.Migrations
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uuid", nullable: false),
-                    DockerContainerId = table.Column<Guid>(type: "uuid", nullable: true),
+                    DockerContainerId = table.Column<Guid>(type: "uuid", nullable: false),
                     State = table.Column<string>(type: "text", nullable: false),
                     Status = table.Column<string>(type: "text", nullable: false),
                     Health = table.Column<string>(type: "text", nullable: true),
@@ -91,13 +88,13 @@ namespace MonitoringService.Infrastructure.Migrations
                         column: x => x.DockerContainerId,
                         principalTable: "DockerContainers",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateIndex(
                 name: "IX_DockerContainers_ContainerId_DockerHostId",
                 table: "DockerContainers",
-                columns: new[] { "ContainerId", "DockerHostId" },
+                columns: new[] {"ContainerId", "DockerHostId"},
                 unique: true);
 
             migrationBuilder.CreateIndex(
@@ -114,13 +111,13 @@ namespace MonitoringService.Infrastructure.Migrations
             migrationBuilder.CreateIndex(
                 name: "IX_StatsRecords_DockerContainerId_UpdateTime",
                 table: "StatsRecords",
-                columns: new[] { "DockerContainerId", "UpdateTime" },
+                columns: new[] {"DockerContainerId", "UpdateTime"},
                 unique: true);
 
             migrationBuilder.CreateIndex(
                 name: "IX_StatusRecords_DockerContainerId_UpdateTime",
                 table: "StatusRecords",
-                columns: new[] { "DockerContainerId", "UpdateTime" },
+                columns: new[] {"DockerContainerId", "UpdateTime"},
                 unique: true);
         }
 

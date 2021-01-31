@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Confluent.Kafka;
@@ -15,11 +14,12 @@ namespace MonitoringService.Infrastructure.Gateways
 {
     public class KafkaConsumerBackgroundService : BackgroundService
     {
+        public const string OverviewTopic = "f0e1e946-50d0-4a2b-b1a5-f21b92e09ac1-general_info";
+        public const string StatsTopic = "33a325ce-b0c0-43a7-a846-4f46acdb367e-stats_info";
+
         public static readonly string BootstrapServers =
             Environment.GetEnvironmentVariable("MONITORING_KAFKA_URL") ??
             "kafka1.cfei.dk:9092,kafka2.cfei.dk:9092,kafka3.cfei.dk:9092";
-        public const string OverviewTopic = "f0e1e946-50d0-4a2b-b1a5-f21b92e09ac1-general_info";
-        public const string StatsTopic = "33a325ce-b0c0-43a7-a846-4f46acdb367e-stats_info";
 
         private readonly ILogger<KafkaConsumerBackgroundService> _logger;
         private readonly IServiceProvider _services;
@@ -52,11 +52,13 @@ namespace MonitoringService.Infrastructure.Gateways
                     switch (consumeResult.Topic)
                     {
                         case OverviewTopic:
-                            var statusResult = JsonConvert.DeserializeObject<StatusKafkaServer>(consumeResult.Message.Value);
+                            var statusResult =
+                                JsonConvert.DeserializeObject<StatusKafkaServer>(consumeResult.Message.Value);
                             await ConsumeStatusResult(statusResult);
                             break;
                         case StatsTopic:
-                            var statsResult = JsonConvert.DeserializeObject<StatsKafkaServer>(consumeResult.Message.Value);
+                            var statsResult =
+                                JsonConvert.DeserializeObject<StatsKafkaServer>(consumeResult.Message.Value);
                             await ConsumeStatsResult(statsResult);
                             break;
                     }
@@ -69,15 +71,15 @@ namespace MonitoringService.Infrastructure.Gateways
         private async Task ConsumeStatusResult(StatusKafkaServer statusResult)
         {
             using var scope = _services.CreateScope();
-            
+
             var dockerHostService = scope.ServiceProvider.GetRequiredService<IDockerHostService>();
             var dockerContainerService = scope.ServiceProvider.GetRequiredService<IDockerContainerService>();
             var statusRecordService = scope.ServiceProvider.GetRequiredService<IStatusRecordService>();
-                
+
             var dockerHost = await dockerHostService.CreateIfNotExists(new CreateDockerHostParameters(
                 statusResult.ServerName, statusResult.CommandRequestTopic,
                 statusResult.CommandResponseTopic));
-                            
+
             foreach (var statusResultContainer in statusResult.Containers)
             {
                 var container = await dockerContainerService.CreateIfNotExists(
@@ -98,7 +100,7 @@ namespace MonitoringService.Infrastructure.Gateways
             var dockerHostService = scope.ServiceProvider.GetRequiredService<IDockerHostService>();
             var dockerContainerService = scope.ServiceProvider.GetRequiredService<IDockerContainerService>();
             var statsRecordService = scope.ServiceProvider.GetRequiredService<IStatsRecordService>();
-            
+
             var dockerHost = await dockerHostService.CreateIfNotExists(new CreateDockerHostParameters(
                 statsResult.ServerName, statsResult.CommandRequestTopic,
                 statsResult.CommandResponseTopic));

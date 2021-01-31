@@ -10,7 +10,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace MonitoringService.Infrastructure.Migrations
 {
     [DbContext(typeof(DockerHostContext))]
-    [Migration("20210129111828_Init")]
+    [Migration("20210131102333_Init")]
     partial class Init
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -34,7 +34,7 @@ namespace MonitoringService.Infrastructure.Migrations
                     b.Property<DateTime>("CreationTime")
                         .HasColumnType("timestamp without time zone");
 
-                    b.Property<Guid?>("DockerHostId")
+                    b.Property<Guid>("DockerHostId")
                         .HasColumnType("uuid");
 
                     b.Property<string>("Image")
@@ -102,7 +102,7 @@ namespace MonitoringService.Infrastructure.Migrations
                     b.Property<decimal>("DiskOutputBytes")
                         .HasColumnType("numeric(20,0)");
 
-                    b.Property<Guid?>("DockerContainerId")
+                    b.Property<Guid>("DockerContainerId")
                         .HasColumnType("uuid");
 
                     b.Property<double>("MemoryPercentage")
@@ -137,7 +137,7 @@ namespace MonitoringService.Infrastructure.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uuid");
 
-                    b.Property<Guid?>("DockerContainerId")
+                    b.Property<Guid>("DockerContainerId")
                         .HasColumnType("uuid");
 
                     b.Property<string>("Health")
@@ -166,7 +166,9 @@ namespace MonitoringService.Infrastructure.Migrations
                 {
                     b.HasOne("MonitoringService.Domain.DockerHost", "DockerHost")
                         .WithMany("DockerContainers")
-                        .HasForeignKey("DockerHostId");
+                        .HasForeignKey("DockerHostId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("DockerHost");
                 });
@@ -175,7 +177,9 @@ namespace MonitoringService.Infrastructure.Migrations
                 {
                     b.HasOne("MonitoringService.Domain.DockerContainer", "DockerContainer")
                         .WithMany("StatsRecords")
-                        .HasForeignKey("DockerContainerId");
+                        .HasForeignKey("DockerContainerId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("DockerContainer");
                 });
@@ -184,7 +188,9 @@ namespace MonitoringService.Infrastructure.Migrations
                 {
                     b.HasOne("MonitoringService.Domain.DockerContainer", "DockerContainer")
                         .WithMany("StatusRecords")
-                        .HasForeignKey("DockerContainerId");
+                        .HasForeignKey("DockerContainerId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("DockerContainer");
                 });
