@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using Confluent.Kafka;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
@@ -82,14 +83,21 @@ namespace MonitoringService.Infrastructure.Gateways
 
             foreach (var statusResultContainer in statusResult.Containers)
             {
-                var container = await dockerContainerService.CreateIfNotExists(
-                    new CreateDockerContainerParameters(statusResultContainer.Id,
-                        statusResultContainer.Name, statusResultContainer.Image,
-                        statusResult.ServerName, statusResultContainer.CreationTime));
-                await statusRecordService.Create(new CreateStatusRecordParameters(
-                    statusResultContainer.Id, statusResult.ServerName, statusResultContainer.State,
-                    statusResultContainer.Status, statusResultContainer.Health,
-                    statusResultContainer.UpdateTime));
+                try
+                {
+                    var container = await dockerContainerService.CreateIfNotExists(
+                        new CreateDockerContainerParameters(statusResultContainer.Id,
+                            statusResultContainer.Name, statusResultContainer.Image,
+                            statusResult.ServerName, statusResultContainer.CreationTime));
+                    await statusRecordService.Create(new CreateStatusRecordParameters(
+                        statusResultContainer.Id, statusResult.ServerName, statusResultContainer.State,
+                        statusResultContainer.Status, statusResultContainer.Health,
+                        statusResultContainer.UpdateTime));
+                }
+                catch (DbUpdateException ex)
+                {
+                    Console.Write("Ignoring status row for " + statusResultContainer.Id);
+                }
             }
         }
 
@@ -107,17 +115,24 @@ namespace MonitoringService.Infrastructure.Gateways
 
             foreach (var statsResultContainer in statsResult.Containers)
             {
-                var container = await dockerContainerService.CreateIfNotExists(
-                    new CreateDockerContainerParameters(statsResultContainer.Id,
-                        statsResultContainer.Name, statsResultContainer.Image,
-                        statsResult.ServerName, DateTime.UnixEpoch));
+                try
+                {
+                    var container = await dockerContainerService.CreateIfNotExists(
+                        new CreateDockerContainerParameters(statsResultContainer.Id,
+                            statsResultContainer.Name, statsResultContainer.Image,
+                            statsResult.ServerName, DateTime.UnixEpoch));
 
-                await statsRecordService.Create(new CreateStatsRecordParameters(statsResultContainer.Id,
-                    statsResult.ServerName, statsResultContainer.CpuUsage, statsResultContainer.NumOfCpu,
-                    statsResultContainer.SystemCpuUsage, statsResultContainer.CpuPercentage,
-                    statsResultContainer.MemoryPercentage, statsResultContainer.NetInputBytes,
-                    statsResultContainer.NetOutputBytes, statsResultContainer.DiskInputBytes,
-                    statsResultContainer.DiskOutputBytes, statsResultContainer.UpdateTime));
+                    await statsRecordService.Create(new CreateStatsRecordParameters(statsResultContainer.Id,
+                        statsResult.ServerName, statsResultContainer.CpuUsage, statsResultContainer.NumOfCpu,
+                        statsResultContainer.SystemCpuUsage, statsResultContainer.CpuPercentage,
+                        statsResultContainer.MemoryPercentage, statsResultContainer.NetInputBytes,
+                        statsResultContainer.NetOutputBytes, statsResultContainer.DiskInputBytes,
+                        statsResultContainer.DiskOutputBytes, statsResultContainer.UpdateTime));
+                }
+                catch (DbUpdateException ex)
+                {
+                    Console.Write("Ignoring status row for " + statsResultContainer.Id);
+                }
             }
         }
     }
