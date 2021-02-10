@@ -31,6 +31,11 @@ namespace MonitoringService.Infrastructure.Repositories
             await _context.SaveChangesAsync();
         }
 
+        public async Task<DockerContainer> Get(Guid id)
+        {
+            return await _context.DockerContainers.FirstOrDefaultAsync(container => container.Id.Equals(id));
+        }
+
         public async Task<DockerContainer> Get(string containerId, string serverName)
         {
             return await _context.DockerContainers.FirstOrDefaultAsync(container =>

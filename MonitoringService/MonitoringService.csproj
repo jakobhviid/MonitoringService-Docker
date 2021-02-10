@@ -5,7 +5,6 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <Folder Include="Api\Models" />
         <Folder Include="Infrastructure\Migrations" />
     </ItemGroup>
 

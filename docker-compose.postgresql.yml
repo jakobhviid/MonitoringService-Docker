@@ -1,9 +1,9 @@
 version: "3"
 
 services:
-  monitoring-database:
+  monitoring-database-local:
     image: postgres
-    container_name: monitoring-database
+    container_name: monitoring-database-local
     ports:
       - 5433:5432
     environment:

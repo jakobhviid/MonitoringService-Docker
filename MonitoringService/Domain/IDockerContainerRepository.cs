@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
 
 namespace MonitoringService.Domain
 {
@@ -6,6 +7,7 @@ namespace MonitoringService.Domain
     {
         public Task<bool> ContainerIdExists(string containerId, string serverName);
         public Task Create(DockerContainer dockerContainer);
+        public Task<DockerContainer> Get(Guid id);
         public Task<DockerContainer> Get(string containerId, string serverName);
     }
 }

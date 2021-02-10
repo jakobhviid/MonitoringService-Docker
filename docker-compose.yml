@@ -4,18 +4,20 @@ services:
   monitoring-database:
     image: postgres
     container_name: monitoring-database
-    restart: always
+    ports:
+      - 5440:5432
     environment:
       POSTGRES_USER: monitoring
       POSTGRES_PASSWORD: Monitoring_database_password1
       POSTGRES_DB: monitoring_db
 
   monitoring:
-    image: cfei/monitoring-service
+    image: dst/monitoring-service
     container_name: monitoring
     ports:
       - 5002:80
     environment:
       MONITORING_POSTGRES_CONNECTION_STRING: "Host=monitoring-database;Port=5432;Database=monitoring_db;Username=monitoring;Password=Monitoring_database_password1"
+      MONITORING_KAFKA_URL: "stage1.cfei.dk:9092,stage2.cfei.dk:9092,stage3.cfei.dk:9092"
     depends_on:
       - monitoring-database
